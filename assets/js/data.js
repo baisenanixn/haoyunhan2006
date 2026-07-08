@@ -1,162 +1,169 @@
-const playlists = [
-  {
-    id: 1,
-    title: '华语流行热歌榜 TOP100',
-    cover: 'https://picsum.photos/seed/pl1/300',
-    playCount: '1286万',
-    type: '推荐歌单'
-  },
-  {
-    id: 2,
-    title: '欧美经典金曲精选',
-    cover: 'https://picsum.photos/seed/pl2/300',
-    playCount: '852万',
-    type: '推荐歌单'
-  },
-  {
-    id: 3,
-    title: '日系动漫原声合集',
-    cover: 'https://picsum.photos/seed/pl3/300',
-    playCount: '634万',
-    type: '推荐歌单'
-  },
-  {
-    id: 4,
-    title: '治愈系轻音乐',
-    cover: 'https://picsum.photos/seed/pl4/300',
-    playCount: '456万',
-    type: '推荐歌单'
-  },
-  {
-    id: 5,
-    title: '深夜失眠电台',
-    cover: 'https://picsum.photos/seed/pl5/300',
-    playCount: '328万',
-    type: '推荐歌单'
-  },
-  {
-    id: 6,
-    title: '运动健身燃曲',
-    cover: 'https://picsum.photos/seed/pl6/300',
-    playCount: '289万',
-    type: '推荐歌单'
-  },
-];
+const MusicAPI = {
+  baseURL: 'https://itunes.apple.com',
+  useLocal: true,
+  localFallback: true,
 
-const songs = [
-  {
-    id: 1,
-    title: '夜曲',
-    artist: '周杰伦',
-    album: '十一月的萧邦',
-    cover: 'https://picsum.photos/seed/song1/200',
-    duration: '4:25',
-    durationSec: 265
-  },
-  {
-    id: 2,
-    title: '晴天',
-    artist: '周杰伦',
-    album: '叶惠美',
-    cover: 'https://picsum.photos/seed/song2/200',
-    duration: '4:29',
-    durationSec: 269
-  },
-  {
-    id: 3,
-    title: '稻香',
-    artist: '周杰伦',
-    album: '魔杰座',
-    cover: 'https://picsum.photos/seed/song3/200',
-    duration: '3:43',
-    durationSec: 223
-  },
-  {
-    id: 4,
-    title: '七里香',
-    artist: '周杰伦',
-    album: '七里香',
-    cover: 'https://picsum.photos/seed/song4/200',
-    duration: '4:59',
-    durationSec: 299
-  },
-  {
-    id: 5,
-    title: '青花瓷',
-    artist: '周杰伦',
-    album: '我很忙',
-    cover: 'https://picsum.photos/seed/song5/200',
-    duration: '3:59',
-    durationSec: 239
-  },
-  {
-    id: 6,
-    title: '告白气球',
-    artist: '周杰伦',
-    album: '周杰伦的床边故事',
-    cover: 'https://picsum.photos/seed/song6/200',
-    duration: '3:35',
-    durationSec: 215
-  },
-  {
-    id: 7,
-    title: '简单爱',
-    artist: '周杰伦',
-    album: '范特西',
-    cover: 'https://picsum.photos/seed/song7/200',
-    duration: '4:30',
-    durationSec: 270
-  },
-  {
-    id: 8,
-    title: '搁浅',
-    artist: '周杰伦',
-    album: '七里香',
-    cover: 'https://picsum.photos/seed/song8/200',
-    duration: '4:16',
-    durationSec: 256
-  },
-];
+  async search(term, media = 'music', limit = 20) {
+    if (this.useLocal && typeof LocalData !== 'undefined') {
+      const songs = await LocalData.searchSongs(term);
+      if (songs.length > 0) {
+        return songs.slice(0, limit);
+      }
+    }
 
-const artists = [
-  {
-    id: 1,
-    name: '周杰伦',
-    avatar: 'https://picsum.photos/seed/artist1/200',
+    const url = `${this.baseURL}/search?term=${encodeURIComponent(term)}&media=${media}&limit=${limit}`;
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      return data.results || [];
+    } catch (e) {
+      console.warn('搜索失败，使用本地数据:', e);
+      if (this.localFallback && typeof LocalData !== 'undefined') {
+        const songs = await LocalData.searchSongs(term);
+        return songs.slice(0, limit);
+      }
+      return [];
+    }
   },
-  {
-    id: 2,
-    name: '林俊杰',
-    avatar: 'https://picsum.photos/seed/artist2/200',
+
+  async lookupArtist(artistId, limit = 10) {
+    if (this.useLocal && typeof LocalData !== 'undefined') {
+      const songs = await LocalData.getSongsByArtist(artistId);
+      const artist = (await LocalData.getAllArtists()).find(a => a.artistId === artistId);
+      return { artist: artist || null, songs: songs.slice(0, limit) };
+    }
+
+    const url = `${this.baseURL}/lookup?id=${artistId}&entity=song&limit=${limit}`;
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      const results = data.results || [];
+      const artist = results.find(r => r.wrapperType === 'artist');
+      const songs = results.filter(r => r.wrapperType === 'track');
+      return { artist, songs };
+    } catch (e) {
+      console.warn('获取歌手信息失败，使用本地数据:', e);
+      if (this.localFallback && typeof LocalData !== 'undefined') {
+        const songs = await LocalData.getSongsByArtist(artistId);
+        const artist = (await LocalData.getAllArtists()).find(a => a.artistId === artistId);
+        return { artist: artist || null, songs: songs.slice(0, limit) };
+      }
+      return { artist: null, songs: [] };
+    }
   },
-  {
-    id: 3,
-    name: '陈奕迅',
-    avatar: 'https://picsum.photos/seed/artist3/200',
+
+  async getTopCharts(genre = 'pop', limit = 20) {
+    if (this.useLocal && typeof LocalData !== 'undefined') {
+      return await LocalData.getAllSongs(limit);
+    }
+    const terms = ['top hits', 'pop music', 'rock music', 'hip hop', 'electronic music', 'chinese pop', 'kpop', 'jazz', 'classical', 'lofi'];
+    const searchTerm = terms[Math.floor(Math.random() * terms.length)];
+    return this.search(searchTerm, 'music', limit);
   },
-  {
-    id: 4,
-    name: '邓紫棋',
-    avatar: 'https://picsum.photos/seed/artist4/200',
+
+  async getRecommendedArtists() {
+    if (this.useLocal && typeof LocalData !== 'undefined') {
+      const all = await LocalData.getAllArtists();
+      const shuffled = [...all].sort(() => 0.5 - Math.random()).slice(0, 8);
+      return shuffled;
+    }
+    const artistNames = [
+      'Taylor Swift', 'Ed Sheeran', 'Adele', 'The Weeknd',
+      'Billie Eilish', 'Bruno Mars', 'Drake', 'Dua Lipa',
+      'Coldplay', 'Imagine Dragons', 'Maroon 5', 'Post Malone'
+    ];
+    const shuffled = [...artistNames].sort(() => 0.5 - Math.random()).slice(0, 8);
+    const results = [];
+    for (const name of shuffled) {
+      const tracks = await this.search(name, 'music', 1);
+      if (tracks.length > 0) {
+        results.push({
+          artistId: tracks[0].artistId,
+          artistName: tracks[0].artistName,
+          avatar: tracks[0].artworkUrl100
+        });
+      }
+    }
+    return results;
   },
-  {
-    id: 5,
-    name: '薛之谦',
-    avatar: 'https://picsum.photos/seed/artist5/200',
+
+  mapToSong(track, index = 0) {
+    const durationSec = Math.floor((track.trackTimeMillis || 0) / 1000);
+    const mins = Math.floor(durationSec / 60);
+    const secs = durationSec % 60;
+    const songId = track.trackId || index;
+    const seed = 'song' + songId;
+    return {
+      id: songId,
+      title: track.trackName || '未知歌曲',
+      artist: track.artistName || '未知歌手',
+      artistId: track.artistId || null,
+      album: track.collectionName || '未知专辑',
+      cover: `https://picsum.photos/seed/${seed}/600`,
+      coverSmall: `https://picsum.photos/seed/${seed}/200`,
+      duration: `${mins}:${secs.toString().padStart(2, '0')}`,
+      durationSec: durationSec,
+      previewUrl: track.previewUrl || '',
+      genre: track.primaryGenreName || '',
+      releaseDate: track.releaseDate || ''
+    };
   },
-  {
-    id: 6,
-    name: 'Taylor Swift',
-    avatar: 'https://picsum.photos/seed/artist6/200',
+
+  mapToPlaylist(tracks, title, index = 0) {
+    return {
+      id: 'pl_' + index,
+      title: title || '精选歌单',
+      cover: tracks[0]?.cover || 'https://picsum.photos/seed/playlist/300',
+      playCount: Math.floor(Math.random() * 5000 + 500) + '万',
+      type: '推荐歌单',
+      songCount: tracks.length,
+      songs: tracks
+    };
+  }
+};
+
+const Storage = {
+  getLiked() {
+    try {
+      return JSON.parse(localStorage.getItem('qqmusic_liked') || '[]');
+    } catch { return []; }
   },
-  {
-    id: 7,
-    name: 'Ed Sheeran',
-    avatar: 'https://picsum.photos/seed/artist7/200',
+
+  addLiked(song) {
+    const liked = this.getLiked();
+    if (!liked.find(s => s.id === song.id)) {
+      liked.unshift(song);
+      localStorage.setItem('qqmusic_liked', JSON.stringify(liked));
+    }
+    return liked;
   },
-  {
-    id: 8,
-    name: '米津玄師',
-    avatar: 'https://picsum.photos/seed/artist8/200',
+
+  removeLiked(songId) {
+    const liked = this.getLiked().filter(s => s.id !== songId);
+    localStorage.setItem('qqmusic_liked', JSON.stringify(liked));
+    return liked;
   },
-];
+
+  isLiked(songId) {
+    return this.getLiked().some(s => s.id === songId);
+  },
+
+  getHistory() {
+    try {
+      return JSON.parse(localStorage.getItem('qqmusic_history') || '[]');
+    } catch { return []; }
+  },
+
+  addHistory(song) {
+    const history = this.getHistory();
+    const filtered = history.filter(s => s.id !== song.id);
+    filtered.unshift(song);
+    localStorage.setItem('qqmusic_history', JSON.stringify(filtered.slice(0, 50)));
+    return filtered;
+  },
+
+  clearHistory() {
+    localStorage.removeItem('qqmusic_history');
+    return [];
+  }
+};

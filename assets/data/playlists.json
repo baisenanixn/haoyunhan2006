@@ -1,0 +1,138 @@
+{
+  "playlists": [
+    {
+      "id": "pl_0",
+      "title": "华语流行热歌榜",
+      "description": "最新最热华语歌曲尽收其中",
+      "cover": "https://picsum.photos/seed/pl_chinese/300/300",
+      "playCount": "4867万",
+      "type": "推荐歌单",
+      "songCount": 20,
+      "tags": ["华语", "流行", "热歌"]
+    },
+    {
+      "id": "pl_1",
+      "title": "欧美经典金曲",
+      "description": "跨越时代的永恒旋律",
+      "cover": "https://picsum.photos/seed/pl_western/300/300",
+      "playCount": "3452万",
+      "type": "推荐歌单",
+      "songCount": 20,
+      "tags": ["欧美", "经典", "流行"]
+    },
+    {
+      "id": "pl_2",
+      "title": "电子节拍",
+      "description": "让节奏点燃你的夜晚",
+      "cover": "https://picsum.photos/seed/pl_electronic/300/300",
+      "playCount": "5087万",
+      "type": "推荐歌单",
+      "songCount": 20,
+      "tags": ["电子", "舞曲", "EDM"]
+    },
+    {
+      "id": "pl_3",
+      "title": "治愈系音乐",
+      "description": "温暖你的心灵",
+      "cover": "https://picsum.photos/seed/pl_healing/300/300",
+      "playCount": "4007万",
+      "type": "推荐歌单",
+      "songCount": 20,
+      "tags": ["治愈", "民谣", "轻柔"]
+    },
+    {
+      "id": "pl_4",
+      "title": "深夜电台",
+      "description": "陪你度过每一个深夜",
+      "cover": "https://picsum.photos/seed/pl_late/300/300",
+      "playCount": "3471万",
+      "type": "推荐歌单",
+      "songCount": 20,
+      "tags": ["深夜", "安静", "怀旧"]
+    },
+    {
+      "id": "pl_5",
+      "title": "运动健身",
+      "description": "激发你的运动潜能",
+      "cover": "https://picsum.photos/seed/pl_sport/300/300",
+      "playCount": "3743万",
+      "type": "推荐歌单",
+      "songCount": 20,
+      "tags": ["运动", "节奏", "活力"]
+    },
+    {
+      "id": "pl_6",
+      "title": "学习专注",
+      "description": "让你更专注地学习",
+      "cover": "https://picsum.photos/seed/pl_study/300/300",
+      "playCount": "2890万",
+      "type": "个人歌单",
+      "songCount": 20,
+      "tags": ["学习", "专注", "白噪音"]
+    },
+    {
+      "id": "pl_7",
+      "title": "我的最爱",
+      "description": "我收藏的精彩音乐",
+      "cover": "https://picsum.photos/seed/pl_fav/300/300",
+      "playCount": "1230万",
+      "type": "个人歌单",
+      "songCount": 20,
+      "tags": ["收藏", "喜欢", "精选"]
+    },
+    {
+      "id": "pl_8",
+      "title": "Taylor Swift精选",
+      "description": "Taylor Swift最受欢迎的歌曲",
+      "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/2d/46/e0/2d46e0bc-8ab9-85dd-4b56-ee6951351034/25UM1IM19577.rgb.jpg/100x100bb.jpg",
+      "playCount": "5230万",
+      "type": "歌手歌单",
+      "songCount": 20,
+      "tags": ["Taylor Swift", "流行", "精选"]
+    },
+    {
+      "id": "pl_9",
+      "title": "Ed Sheeran精选",
+      "description": "Ed Sheeran的经典之作",
+      "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/4b/30/2c/4b302cb6-7a14-5464-4e97-0577e9d0be49/18UMGIM82277.rgb.jpg/100x100bb.jpg",
+      "playCount": "4180万",
+      "type": "歌手歌单",
+      "songCount": 20,
+      "tags": ["Ed Sheeran", "民谣", "流行"]
+    }
+  ],
+  "banners": [
+    {
+      "id": "banner_1",
+      "title": "华语流行热歌榜",
+      "subtitle": "最新最热华语歌曲尽收其中",
+      "image": "https://picsum.photos/seed/banner1/1200/300",
+      "color": "#3a1c71",
+      "link": "pl_0"
+    },
+    {
+      "id": "banner_2",
+      "title": "欧美经典金曲",
+      "subtitle": "跨越时代的永恒旋律",
+      "image": "https://picsum.photos/seed/banner2/1200/300",
+      "color": "#d76d77",
+      "link": "pl_1"
+    },
+    {
+      "id": "banner_3",
+      "title": "日系动漫原声",
+      "subtitle": "唤起你的二次元回忆",
+      "image": "https://picsum.photos/seed/banner3/1200/300",
+      "color": "#ffaf7b",
+      "link": "pl_jp"
+    }
+  ],
+  "quickEntries": [
+    { "icon": "📅", "name": "每日推荐", "key": "daily" },
+    { "icon": "📻", "name": "私人FM", "key": "fm" },
+    { "icon": "🏆", "name": "排行榜", "key": "rank" },
+    { "icon": "📋", "name": "歌单分类", "key": "category" },
+    { "icon": "🎤", "name": "歌手", "key": "artist" },
+    { "icon": "🆕", "name": "新歌速递", "key": "new" }
+  ]
+}
